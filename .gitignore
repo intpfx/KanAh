@@ -1,0 +1,36 @@
+# ---------- 构建产物 ----------
+.gradle/
+.kotlin/
+build/
+app/build/
+native/atv/target/
+app/src/main/jniLibs/
+# Private proxy migration material must never be included in source control.
+artifacts/builtin-proxy-*/private/
+
+# ---------- 机器相关 / 编辑器噪声 ----------
+local.properties
+.DS_Store
+.idea/
+*.iml
+*.swp
+
+# 本地日志、截图、设备材料、证书及预览产物不入库。
+/artifacts/*
+!/artifacts/README.md
+__pycache__/
+*.py[cod]
+*.apk
+*.aab
+# 布局编辑器使用的真实节目截图仅本地保存。
+/tools/tv-ui-editor/assets/live-frame.png
+
+# Signing material must never enter the repository.
+*.jks
+*.keystore
+.env
+.env.*
+
+# Legacy local libraries and launcher artwork.
+/app/libs/*.aar
+/app/src/main/res/drawable-nodpi/banner.png

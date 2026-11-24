@@ -1,0 +1,10 @@
+<resources>
+    <!-- Pages paint opaque content while retaining the live window and its video surface below. -->
+    <style name="LiveBrowseTheme" parent="MusicTheme">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowDisablePreview">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+</resources>

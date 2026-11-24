@@ -1,0 +1,6 @@
+TV artwork compositing and lyric utilities are reused from the user's local
+SmartisaxMusic project (apps/SmartisaxMusic), which credits Gift music lyrics
+and artwork/palette work. Native catalog, cache and playback code was adapted
+from that same local application. The TV layout and remote navigation were
+rewritten for Live. No mobile renderer, custom fonts, Gift journal, private
+credentials, camera or microphone integration is included.

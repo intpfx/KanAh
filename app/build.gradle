@@ -1,0 +1,64 @@
+plugins { id 'com.android.application'; id 'org.jetbrains.kotlin.android' }
+// Secrets are provided by the invoking shell, never stored in source control.
+def releaseSigningEnv = ['LIVE_KEYSTORE', 'LIVE_KEY_ALIAS', 'LIVE_STORE_PASSWORD', 'LIVE_KEY_PASSWORD']
+def releaseSigningValues = releaseSigningEnv.collectEntries { [(it): System.getenv(it)] }
+def providedSigning = releaseSigningValues.values().count { it != null && !it.isEmpty() }
+if (providedSigning != 0 && providedSigning != releaseSigningEnv.size()) {
+    throw new GradleException('Release signing requires all four LIVE_* signing environment variables.')
+}
+def migrationSource = providers.gradleProperty('migrationSource').orNull
+if (migrationSource != null && !(migrationSource in ['com.siaovon.khub', 'com.live.tv'])) {
+    throw new GradleException('Unsupported migration source package.')
+}
+android {
+    namespace 'com.live.tv'
+    compileSdk 36
+    signingConfigs {
+        if (providedSigning == releaseSigningEnv.size()) {
+            release {
+                storeFile file(releaseSigningValues.LIVE_KEYSTORE)
+                storePassword releaseSigningValues.LIVE_STORE_PASSWORD
+                keyAlias releaseSigningValues.LIVE_KEY_ALIAS
+                keyPassword releaseSigningValues.LIVE_KEY_PASSWORD
+            }
+        }
+    }
+    buildTypes {
+        release {
+            debuggable false
+            if (providedSigning == releaseSigningEnv.size()) signingConfig signingConfigs.release
+        }
+    }
+    buildFeatures { buildConfig true }
+    defaultConfig {
+        applicationId (migrationSource ?: 'com.siaovon.kanah'); minSdk 26; targetSdk 34; versionCode 73; versionName '1.0.0-rc1-recovery3'
+        def musicApiBaseUrl = project.findProperty('musicApiBaseUrl') ?: 'https://music-api.gdstudio.xyz/api.php'
+        testInstrumentationRunner 'com.live.tv.media.KHubMigrationRunner'
+        buildConfigField 'String', 'MUSIC_API_BASE_URL', "\"${musicApiBaseUrl}\""
+    }
+    compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+    packaging { jniLibs { useLegacyPackaging = true; excludes += '**/libatv_android.so' } }
+}
+
+kotlin { compilerOptions { jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17 } }
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.7.1'
+    implementation 'androidx.core:core-ktx:1.16.0'
+    implementation 'androidx.webkit:webkit:1.14.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.9.4'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.11.0'
+    implementation 'androidx.media3:media3-exoplayer:1.11.0'
+    implementation 'androidx.media3:media3-session:1.11.0'
+    implementation 'androidx.media3:media3-datasource-okhttp:1.11.0'
+    implementation 'androidx.media3:media3-ui:1.11.0'
+    implementation 'androidx.media3:media3-exoplayer-hls:1.11.0'
+    implementation 'androidx.media3:media3-inspector-frame:1.11.0'
+    implementation 'org.chromium.net:cronet-embedded:143.7445.0'
+    implementation 'org.jsoup:jsoup:1.18.3'
+    implementation 'com.squareup.okhttp3:okhttp:5.3.0'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.11.0'
+    testImplementation 'org.robolectric:robolectric:4.16.1'
+    testImplementation 'androidx.test:core-ktx:1.7.0'
+}
+android { testOptions { unitTests.includeAndroidResources = true } }

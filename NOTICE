@@ -1,0 +1,12 @@
+KanAh！ (K站)
+
+Formerly Live, separated from Maci on 2026-11-16.
+
+KanAh!-owned source code is licensed under the MIT License in LICENSE.
+Third-party components remain subject to their own licenses and notices:
+
+- Vendored ATV code and historical dadb attribution: THIRD_PARTY_ATV_NOTICES.md.
+- Music implementation provenance: app/src/main/assets/music/NOTICE.
+- Tabler SVG-derived icons: app/src/main/assets/tabler-icons-LICENSE.txt (MIT).
+- Gradle Wrapper scripts and bootstrap JAR: docs/LICENSE-Apache-2.0.txt.
+- Cronet is resolved from Google Maven. Its upstream license is declared in its Maven POM.
