@@ -158,6 +158,15 @@ cached 状态并被系统冻结；该结论现在只影响直播恢复，不再�
 
 ## 仓库与分发
 
+向 GitHub 推送指向 `main` 历史中提交的标签后，GitHub Actions 会运行单元测试和
+Release lint，构建并核验签名 APK，再将 `KanAh.apk` 与 `SHA256SUMS.txt` 发布到该标签的
+[GitHub Release](https://github.com/intpfx/KanAh/releases)。普通分支推送不会发布。
+发布前在 `app/build.gradle` 更新 Android 版本名和版本号，再推送相应标签。
+
+工作流使用仓库 Actions Secrets 中的 `LIVE_KEYSTORE_BASE64`、`LIVE_KEY_ALIAS`、
+`LIVE_STORE_PASSWORD` 和 `LIVE_KEY_PASSWORD`。Actions 变量 `LIVE_CERTIFICATE_SHA256`
+保存预期证书的 SHA-256 指纹。签名配置缺失或证书校验失败时，本次发布会停止。
+
 - `app/`：Android 应用、随包页面资源及原生测试。
 - `tests/`：Java 和 JavaScript 行为测试。
 - `scripts/`：构建辅助与发布校验。
