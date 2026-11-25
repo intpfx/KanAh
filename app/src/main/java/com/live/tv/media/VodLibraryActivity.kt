@@ -935,6 +935,10 @@ class VodLibraryActivity : Activity() {
                     instance.setMediaItem(MediaItem.Builder().setUri(uri).setMediaId(id)
                         .setMimeType(spec.optString("mimeType", "video/mp4")).build())
                     instance.addListener(object : Player.Listener {
+                        override fun onPlaybackStateChanged(state: Int) {
+                            if (state == Player.STATE_ENDED) onEpisodeEnded(instance)
+                        }
+
                         override fun onRenderedFirstFrame() {
                             if (player === instance) { renderedFrame = true; sampleEpisodeTheme(instance); revealVideo(instance) }
                         }
@@ -1099,6 +1103,13 @@ class VodLibraryActivity : Activity() {
             if (episode != null) startEpisode(episode, true) else pendingUserPlay = true
             return
         }
+        if (p.playbackState == Player.STATE_ENDED) {
+            val reference = playerRef ?: return
+            episodeAdapter.items.firstOrNull {
+                LibraryReference.key(it.reference) == LibraryReference.key(reference)
+            }?.let(::play)
+            return
+        }
         if (p.playWhenReady) {
             p.pause()
             if (p.playbackState == Player.STATE_BUFFERING) showDetailMessage("已暂停")
@@ -1114,6 +1125,30 @@ class VodLibraryActivity : Activity() {
             scheduleHideChrome()
         }
         updatePlaybackControls()
+    }
+
+    private fun onEpisodeEnded(instance: ExoPlayer) {
+        if (player !== instance) return
+        savePlayerProgress()
+        renderEpisodes()
+        val reference = playerRef ?: return
+        if (!active || !instance.playWhenReady) return
+
+        // Defer player replacement until the current listener dispatch finishes.
+        main.post {
+            if (!active || player !== instance || instance.playbackState != Player.STATE_ENDED ||
+                !instance.playWhenReady) return@post
+            val items = episodeAdapter.items
+            val index = items.indexOfFirst { LibraryReference.key(it.reference) == LibraryReference.key(reference) }
+            val next = if (index >= 0) items.getOrNull(index + 1) else null
+            if (next != null && !actionLoading && !detailInvalidated) {
+                play(next)
+                chrome.resetFocus()
+            } else {
+                instance.pause()
+                showChrome()
+            }
+        }
     }
 
     private fun savePlayerProgress() {
@@ -1228,7 +1263,7 @@ class VodLibraryActivity : Activity() {
                                 showDetailMessage("")
                                 updatePlaybackControls()
                             }
-                            if (state == Player.STATE_ENDED) { savePlayerProgress(); renderEpisodes() }
+                            if (state == Player.STATE_ENDED) onEpisodeEnded(instance)
                         }
                         override fun onRenderedFirstFrame() {
                             if (player !== instance) return
