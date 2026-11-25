@@ -4,7 +4,7 @@
 
 ## 发布范围与当前候选
 
-用户已确定仅本人及家人安装 APK，并选择沿用现有签名密钥。当前主线候选为 `1.0.0-rc1-recovery3` / 73；构建与核验方式见 [家庭自用发布](FAMILY-RELEASE.md)。开源仓库中的 KanAh！自有源码采用 MIT 许可证。公开分发 APK 和商店准备仍按独立流程处理，须保留原有第三方许可声明。
+家庭设备沿用现有签名密钥，GitHub 标签发布使用独立签名。当前主线候选为 `1.0.0-rc1-recovery3` / 73；构建与核验方式见 [家庭自用发布](FAMILY-RELEASE.md)。开源仓库中的 KanAh！自有源码采用 MIT 许可证。公开分发 APK 和商店准备仍按独立流程处理，须保留原有第三方许可声明。
 
 当前 Redmi 安装的双架构 Debug 开发包已于 2026-10-25 与主线构建逐字节核对一致，功能和验证范围见 [主线同步记录](main-sync-20261025.md)。这不等于签名 Release 发布验收。[2026-10-22 实机记录](redmi-stability-20261022.md)属于更早的 ARMv7 候选，覆盖 15 分 3 秒连播、部分频道切换、返回前台与冷启动，不能替代当前新功能的验收。
 
@@ -25,7 +25,7 @@
 
 ## 候选验证命令
 
-在仓库根目录、已配置 JDK / Android SDK 的环境执行；macOS PATH 设置见 [开发环境](../README.md#开发)：
+在仓库根目录、已配置 JDK / Android SDK 的环境执行；macOS PATH 设置见 [开发环境](../AGENTS.md#开发与验证)：
 
 ```sh
 ./gradlew :app:assembleDebug :app:lintDebug :app:testDebugUnitTest
