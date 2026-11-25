@@ -34,6 +34,7 @@ Windows 使用 `gradlew.bat`。依赖从公共 Maven 仓库获取，Cronet 使�
 ## GitHub 标签发布
 
 - 构建入口为 [Android APK release](.github/workflows/android-release.yml)。推送已进入 `main` 历史且包含工作流的标签后，自动运行单元测试和 Release lint，构建并核验签名。
+- 工作流修复后，可从 `main` 手动运行并传入现有标签，按标签提交重建。
 - GitHub Release 附带 `KanAh.apk` 和 `SHA256SUMS.txt`。为新版本打标签前，先在 `app/build.gradle` 更新 `versionName` 并递增 `versionCode`。
 - Actions Secrets 使用 `LIVE_KEYSTORE_BASE64`、`LIVE_KEY_ALIAS`、`LIVE_STORE_PASSWORD` 和 `LIVE_KEY_PASSWORD`，变量 `LIVE_CERTIFICATE_SHA256` 用于证书校验。独立发布签名用于 GitHub APK 的后续覆盖升级。已有不同签名的安装不能直接覆盖升级。
 - 保留仓库外的独立签名备份和全部第三方许可声明，包括 [音乐模块 NOTICE](app/src/main/assets/music/NOTICE)。家庭设备旧签名流程见 [家庭自用发布](docs/FAMILY-RELEASE.md)，正式版验收见 [1.0 发布清单](docs/RELEASE-1.0.md)。
