@@ -31,7 +31,7 @@ android {
     }
     buildFeatures { buildConfig true }
     defaultConfig {
-        applicationId (migrationSource ?: 'com.siaovon.kanah'); minSdk 26; targetSdk 34; versionCode 73; versionName '1.0.0-rc1-recovery3'
+        applicationId (migrationSource ?: 'com.siaovon.kanah'); minSdk 26; targetSdk 34; versionCode 74; versionName '1.0'
         def musicApiBaseUrl = project.findProperty('musicApiBaseUrl') ?: 'https://music-api.gdstudio.xyz/api.php'
         testInstrumentationRunner 'com.live.tv.media.KHubMigrationRunner'
         buildConfigField 'String', 'MUSIC_API_BASE_URL', "\"${musicApiBaseUrl}\""
